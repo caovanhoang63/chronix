@@ -112,14 +112,10 @@ Currently not accepting PRs as the core architecture is rapidly changing.
 
 This project is licensed under the **GNU GPLv3 License** - see the [LICENSE](LICENSE) file for details.
 
------
+---
+<div align="center">
+    <p>If you find Chronix useful, consider buying me a coffee to keep the caffeine flowing !</p>
+    <a href="https://www.google.com/search?q=https://ko-fi.com/username"></a>
+    <img src="https://www.google.com/search?q=https://img.shields.io/badge/Ko--fi-F16063%3Fstyle%3Dfor-the-badge%26logo%3Dko-fi%26logoColor%3Dwhite" alt="Support on Ko-fi"/>
+</div>
 
-\<div align="center"\>
-\<p\>If you find Chronix useful, consider buying me a coffee to keep the caffeine flowing\!\</p\>
-\<a href="https://www.google.com/search?q=https://ko-fi.com/username"\>
-\<img src="https://www.google.com/search?q=https://img.shields.io/badge/Ko--fi-F16063%3Fstyle%3Dfor-the-badge%26logo%3Dko-fi%26logoColor%3Dwhite" alt="Support on Ko-fi"\>
-\</a\>
-\</div\>
-
-```
-```

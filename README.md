@@ -104,9 +104,147 @@ We take "Privacy-First" seriously:
 2.  **No Uploads:** We do not send your window titles or activity logs to any server.
 3.  **Local AI:** Text classification happens on your CPU, not via OpenAI API.
 
+## 🏗️ Architecture
+
+Chronix is built on a **native desktop framework** (Wails) with an embedded Go backend and SvelteKit frontend. All data is stored locally in SQLite—no cloud required.
+
+```
+┌─────────────────────────────────────────┐
+│   WebKit Browser (SvelteKit Frontend)   │
+├─────────────────────────────────────────┤
+│     ↔ RPC over WebSocket                │
+├─────────────────────────────────────────┤
+│   Go Backend (Wails Runtime)            │
+│   - Window Tracking (X11/Wayland)      │
+│   - Activity Classification             │
+│   - SQLite Database                     │
+└─────────────────────────────────────────┘
+```
+
+For detailed architecture, see [docs/system-architecture.md](docs/system-architecture.md).
+
+## 🛠️ Development
+
+### Prerequisites
+
+* **Go 1.23+** ([download](https://golang.org/dl))
+* **Node.js 18+** ([download](https://nodejs.org))
+* **pnpm** (strict package manager)
+  ```bash
+  npm install -g pnpm
+  ```
+* **System libraries** (Linux)
+  ```bash
+  # Ubuntu/Debian
+  sudo apt-get install libgtk-3-dev libwebkit2gtk-4.1-dev
+
+  # Fedora
+  sudo dnf install gtk3-devel webkit2gtk4.0-devel
+
+  # Arch
+  sudo pacman -S gtk3 webkit2gtk
+  ```
+
+### Quick Start
+
+```bash
+# Clone and navigate
+git clone https://github.com/username/chronix.git
+cd chronix
+
+# Install frontend dependencies
+cd frontend && pnpm install && cd ..
+
+# Start development (auto-rebuilds on changes)
+wails dev
+```
+
+The app opens in a native window with hot module replacement (HMR) for frontend changes.
+
+### Common Development Tasks
+
+**Type-check TypeScript**:
+```bash
+cd frontend && pnpm run check
+```
+
+**Format code**:
+```bash
+cd frontend && pnpm run format
+```
+
+**Run tests**:
+```bash
+cd frontend && pnpm run test
+go test ./...  # Go tests
+```
+
+**Build production binary**:
+```bash
+cd frontend && pnpm run build
+wails build -tags webkit2_41
+# Output: build/bin/chronix
+```
+
+### Project Structure
+
+See [docs/codebase-summary.md](docs/codebase-summary.md) for detailed file organization.
+
+**Key directories**:
+- `main.go` / `app.go` - Go backend entry point and RPC methods
+- `frontend/src/routes/` - SvelteKit file-based routing
+- `frontend/src/lib/` - Reusable components and utilities
+- `docs/` - Technical documentation
+
+### Code Standards
+
+All code must follow [docs/code-standards.md](docs/code-standards.md):
+- **Go**: Exported methods for RPC, strict error handling
+- **TypeScript**: Strict mode enforced, no `any` types
+- **Svelte**: Component props typed with interfaces
+- **Styling**: TailwindCSS + DaisyUI (no custom CSS unless necessary)
+
+### Frontend-Backend Integration
+
+Go methods are automatically exposed to frontend as TypeScript RPC stubs:
+
+```go
+// Go backend (app.go)
+func (a *App) Greet(name string) string {
+    return fmt.Sprintf("Hello %s!", name)
+}
+```
+
+```ts
+// TypeScript frontend
+import { Greet } from '$lib/wailsjs/wailsjs/go/main/App';
+
+const result = await Greet("World");  // "Hello World!"
+```
+
+**Important**: Only exported (PascalCase) Go methods are callable from frontend. Bindings are auto-generated—never edit them manually.
+
 ## 🤝 Contributing
 
-Currently not accepting PRs as the core architecture is rapidly changing.
+We're actively developing Chronix! Contributions are welcome once the MVP is stabilized.
+
+**For now**:
+- **Bug reports**: Open an issue on GitHub
+- **Feature requests**: Discuss in issues (we're planning Q1 2025 features)
+- **Code contributions**: Discussions encouraged, PRs accepted after core API stabilizes
+
+**Before implementing a feature**:
+1. Check [docs/project-overview-pdr.md](docs/project-overview-pdr.md) for roadmap
+2. Open a discussion issue
+3. Follow [docs/code-standards.md](docs/code-standards.md)
+4. Ensure tests pass: `pnpm test && go test ./...`
+
+## 📚 Documentation
+
+- **[Project Overview & PDR](docs/project-overview-pdr.md)**: Vision, features, requirements
+- **[Codebase Summary](docs/codebase-summary.md)**: File structure and organization
+- **[Code Standards](docs/code-standards.md)**: Conventions and best practices
+- **[System Architecture](docs/system-architecture.md)**: Technical design and flows
 
 ## 📜 License
 
